@@ -40,14 +40,20 @@ class Battery:
         self.discharge_eff = discharge_eff
         self.method = method
 
-    def update_soc(self, current_a, dt_s, voltage=None):
-        """Update the SoC based on the selected estimation method."""
+    def update_soc(self, current_a: float, dt_s: float):
+        """
+        Update the SoC based on the selected estimation method.
+
+        Args:
+            current_a (float): Current in amps at which the battery is discharging
+            dt_s (float): time step
+        """
         if self.method == "coulomb":
             self._update_coulomb(current_a, dt_s)
-        elif self.method == "kalman" and voltage is not None:
-            self._update_kalman(current_a, voltage)
-        elif self.method == "h_infinity" and voltage is not None:
-            self._update_h_infinity(current_a, voltage)
+        elif self.method == "kalman":
+            self._update_kalman(current_a)
+        elif self.method == "h_infinity":
+            self._update_h_infinity(current_a)
         else:
             print("Method selected not valid!")
 
@@ -62,11 +68,11 @@ class Battery:
             current_a /= self.discharge_eff
         self.soc += (current_a * dt_s) / (self.capacity_ah * 3600)
 
-    def _update_kalman(self, current_a, voltage):
+    def _update_kalman(self, current_a):
         """Placeholder for Kalman filter implementation."""
         print("To be developed.")
 
-    def _update_h_infinity(self, current_a, voltage):
+    def _update_h_infinity(self, current_a):
         """Placeholder for H-infinity filter implementation."""
         print("To be developed.")
 
