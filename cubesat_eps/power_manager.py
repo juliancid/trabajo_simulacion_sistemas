@@ -12,9 +12,9 @@ class PowerManager:
         """
         self.voltage = voltage
         self.subsystems_consumption = {
-            'Communications': 7,    # Watts
-            'Cameras': 5,           # Watts
-            'Thermal Control': 2,   # Watts
+            'Communications': 3,    # Watts
+            'Cameras': 2,           # Watts
+            'Thermal Control': 3,   # Watts
             'Sensors': 1            # Watts
         }
         self.priority = {
@@ -24,16 +24,17 @@ class PowerManager:
             'Sensors': 4
         }
 
-    def manage_energy(self, available_current):
+    def manage_energy(self, available_current: float):
         """
         Distributes available power among subsystems based on priority.
 
-        :param available_current: Net available current (A).
-        :return: Dictionary with the state of each subsystem (True=On, False=Off).
+        Args:
+            available_current (float): Net available current (A).
+            return: Dictionary with the state of each subsystem (True=On, False=Off).
         
         TBD:
-        - Implement a more dynamic priority system (e.g., based on mission phases).
-        - Introduce a feedback mechanism to adjust priorities dynamically.
+            - Implement a more dynamic priority system (e.g., based on mission phases).
+            - Introduce a feedback mechanism to adjust priorities dynamically.
         """
 
         # Sort subsystems by priority and calculate total available power
