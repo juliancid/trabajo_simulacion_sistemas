@@ -17,24 +17,25 @@ class cubesatEPS:
         """
         time = np.arange(0, sim_time_s + time_step_s, time_step_s)
         soc = np.zeros_like(time, dtype=float)
-        soc[0] = self.battery.soc
+        soc[0] = self.battery.soc  # Initial SoC
 
+        # Create the lists for the subsystem states
         subsystem_states = {name: [] for name in self.power_manager.subsystems_consumption.keys()}
 
-
+        # Initialize states as turned off
         for subs in self.power_manager.subsystems_consumption.keys():
                 subsystem_states[subs].append(False)
 
+        # Use the method "get_power_output" method to calculate the generation at each point of the simulation
         power_generated = np.array([self.solar_panel.get_power_output(t) for t in time])
         current_generated = power_generated / self.battery.voltage_v
         power_total_load = sum(self.power_manager.subsystems_consumption.values())
         current_load = power_total_load / self.battery.voltage_v
-        
                 
         for i in range(1, len(time)):
             I_net = current_generated[i] - current_load
-            I_net = I_net * self.battery.charge_eff if I_net > 0 else I_net / self.battery.discharge_eff
-            soc[i] = soc[i-1] + (I_net * time_step_s) / (self.battery.capacity_ah * 3600)
+            self.battery.update_soc(I_net, time_step_s)
+            soc[i] = self.battery.soc
             soc[i] = np.clip(soc[i], 0.0, 1.0)
             states = self.power_manager.manage_energy(I_net)
             for subs in self.power_manager.subsystems_consumption.keys():
