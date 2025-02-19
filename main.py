@@ -5,21 +5,21 @@ from utils import cubesatEPS
 
 
 def main():
-    # Configuración de los módulos
-    battery = Battery(capacity_ah=50, voltage_v=12, soc_initial=0.5, charge_eff=0.95, discharge_eff=0.95, method="coulomb")
-    solar_panel = SolarPanel(max_power_w=10, efficiency=0.2, area_m2=0.1)
+    # Initialize the models' objects
+    battery = Battery(capacity_ah=6.4, voltage_v=8.2, soc_initial=0.8, charge_eff=0.95, discharge_eff=0.95, method="coulomb")
+    solar_panel = SolarPanel(max_power_w=20, efficiency=0.2, area_m2=0.2)
     power_manager = PowerManager(voltage=8.2)
     
     satellite = cubesatEPS(battery, solar_panel, power_manager)
 
-    # Parámetros de simulación
+    # Simulation parameters
     sim_time_s = 86400
     time_step_s = 60
     
-    # Ejecutar simulación
+    # Execute simulation
     results = satellite.run_simulation(sim_time_s, time_step_s)
     
-    # Mostrar resultados
+    # Plot results
     satellite.plot_results(results)
 
 if __name__ == "__main__":
